@@ -1,2 +1,1 @@
-# gitops
-ArgoCD
+# GitOps with ArgoCD
