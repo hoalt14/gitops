@@ -13,8 +13,7 @@ spec:
           - clusters:
               values:
                 addonChart: argo-cd
-                # anything not staging or prod use this version
-                addonChartVersion: 5.45.0
+                addonChartVersion: 7.32.0
                 addonChartRepositoryNamespace: argocd
                 addonChartRepository: https://argoproj.github.io/argo-helm
               selector:
@@ -25,18 +24,6 @@ spec:
                   - key: enable_argocd
                     operator: In
                     values: ['true']
-          - clusters:
-              selector:
-                matchLabels:
-                  environment: staging
-              values:
-                addonChartVersion: 5.45.0
-          - clusters:
-              selector:
-                matchLabels:
-                  environment: prod
-              values:
-                addonChartVersion: 5.45.0
   template:
     metadata:
       name: addon-{{name}}-{{values.addonChart}}
@@ -53,9 +40,7 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - $values/{{metadata.annotations.addons_repo_basepath}}charts/addons/{{values.addonChart}}/values.yaml
-              - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
-              - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
+              - $values/charts/{{values.addonChart}}/values.yaml
       destination:
         namespace: '{{values.addonChartRepositoryNamespace}}'
         name: '{{name}}'
@@ -64,4 +49,4 @@ spec:
           prune: false
         syncOptions:
           - CreateNamespace=true
-          - ServerSideApply=true  # Big CRDs.
+          - ServerSideApply=true
