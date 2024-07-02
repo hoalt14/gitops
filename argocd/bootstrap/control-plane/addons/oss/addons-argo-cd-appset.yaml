@@ -24,6 +24,18 @@ spec:
                   - key: enable_argocd
                     operator: In
                     values: ['true']
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: staging
+              values:
+                addonChartVersion: 7.32.0
+          - clusters:
+              selector:
+                matchLabels:
+                  environment: prod
+              values:
+                addonChartVersion: 7.32.0
   template:
     metadata:
       name: addon-{{name}}-{{values.addonChart}}
