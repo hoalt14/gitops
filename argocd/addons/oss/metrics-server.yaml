@@ -14,8 +14,7 @@ spec:
               values:
                 addonChart: metrics-server
                 addonChartNamespace: kube-system
-                # anything not staging or prod use this version
-                addonChartVersion: 3.11.0
+                addonChartVersion: 3.12.1
                 addonChartRepository: https://kubernetes-sigs.github.io/metrics-server
               selector:
                 matchExpressions:
@@ -30,13 +29,13 @@ spec:
                 matchLabels:
                   environment: staging
               values:
-                addonChartVersion: 3.11.0
+                addonChartVersion: 3.12.1
           - clusters:
               selector:
                 matchLabels:
                   environment: prod
               values:
-                addonChartVersion: 3.11.0
+                addonChartVersion: 3.12.1
   template:
     metadata:
       name: addon-{{name}}-{{values.addonChart}}
@@ -53,9 +52,7 @@ spec:
             releaseName: '{{values.addonChart}}'
             ignoreMissingValueFiles: true
             valueFiles:
-              - $values/{{metadata.annotations.addons_repo_basepath}}charts/addons/{{values.addonChart}}/values.yaml
-              - $values/{{metadata.annotations.addons_repo_basepath}}environments/{{metadata.labels.environment}}/addons/{{values.addonChart}}/values.yaml
-              - $values/{{metadata.annotations.addons_repo_basepath}}clusters/{{name}}/addons/{{values.addonChart}}/values.yaml
+              - $values/{{metadata.annotations.addons_repo_basepath}}addons/charts/{{values.addonChart}}/values.yaml
       destination:
         namespace: '{{values.addonChartNamespace}}'
         name: '{{name}}'
@@ -63,4 +60,4 @@ spec:
         automated: {}
         syncOptions:
           - CreateNamespace=true
-          - ServerSideApply=true  # Big CRDs.
+          - ServerSideApply=true
