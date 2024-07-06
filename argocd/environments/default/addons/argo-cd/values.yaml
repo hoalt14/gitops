@@ -189,6 +189,7 @@ configs:
 
           return health_status
 
+
 # -- Array of extra K8s manifests to deploy
 ## Note: Supports use of custom Helm templates
 ##       It gets handle in this form inside the argo-cd chart
@@ -208,7 +209,7 @@ extraObjects:
       name: default
       namespace: {{ $.Release.Namespace | quote }}
       annotations:
-        source: gitops-brige
+        source: gitops-bridge
     spec:
       clusterResourceWhitelist:
       - group: '*'
